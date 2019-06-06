@@ -14,8 +14,6 @@ class NewsViewModel {
     var letestNews: [LatestNew]?
     var breakingNews: [String]?
     var mainStory: MainStory?
-    
-    
     var reloadData: (() -> ())?
     let tableCellTypes: [CellFunctions.Type] = [NewsCellOneViewModel.self , NewsCellTwoViewModel.self]
     
@@ -24,11 +22,9 @@ class NewsViewModel {
     init() {
         self.assignTableViewCells()
     }
-    
     func assignTableViewCells() {
         self.tableCells = self.setupTableViewCells()
     }
-    
 }
 
 extension NewsViewModel {
@@ -36,6 +32,11 @@ extension NewsViewModel {
     func setupTableViewCells() -> [CellFunctions] {
         
         var cellViewModels = [CellFunctions]()
+        if (mainStory != nil) {
+            let newsCellOne = NewsCellOneViewModel(newsHeading: mainStory?.id ?? "", newsDescription: mainStory?.title ?? "", newsImage: mainStory?.url ?? "")
+            cellViewModels.append(newsCellOne)
+        }
+        
         if letestNews != nil {
             var counter = 0
 
