@@ -18,6 +18,7 @@ class NewsCellTwoViewModel {
     let newsHeadingTwo: String
     let newsDescriptionTwo: String
     let newsImageTwo: String
+    var sendIndexPath:((Int , String) -> ())?
     
     init(newsHeadingOne: String , newsDescriptionOne: String ,newsImageOne:String , newsHeadingTwo: String , newsDescriptionTwo: String ,newsImageTwo:String) {
         
@@ -45,6 +46,17 @@ extension NewsCellTwoViewModel: CellFunctions {
         cell.newsDescriptionLabelOne.text = newsDescriptionOne
         cell.newsDescriptionLabelTwo.text = newsDescriptionTwo
         cell.selectionStyle = .none
+        cell.newsDescriptionOneTapped = { () in
+            self.sendIndexPath?(indexPath.row , BoxNum.left.rawValue)
+        }
+        cell.newsDescriptionTwoTapped = { () in
+            self.sendIndexPath?(indexPath.row , BoxNum.right.rawValue)
+        }
         return cell
     }
+}
+
+public enum BoxNum: String {
+    case left = "left"
+    case right = "right"
 }

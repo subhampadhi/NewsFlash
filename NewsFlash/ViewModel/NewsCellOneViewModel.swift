@@ -15,6 +15,9 @@ class NewsCellOneViewModel {
     let newsHeading: String
     let newsDescription: String
     let newsImage: String
+    var sendIndexPath:((Int) -> ())?
+   
+    
     
     init(newsHeading: String , newsDescription: String ,newsImage:String) {
         self.newsHeading = newsHeading
@@ -35,6 +38,9 @@ extension NewsCellOneViewModel: CellFunctions {
         cell.newsHeadingLabel.text = newsHeading
         cell.newsDescriptionLabel.text = newsDescription
         cell.selectionStyle = .none
+        cell.newsDescriptionTapped = { () in
+            self.sendIndexPath?(indexPath.row)
+        }
         return cell
     }
 }

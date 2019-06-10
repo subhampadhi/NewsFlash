@@ -10,13 +10,13 @@ import Foundation
 
 class NewsViewModel {
     
-    
     var message: Message?
     var letestNews: [LatestNew]?
     var breakingNews: [String]?
     var mainStory: MainStory?
     var reloadData: (() -> ())?
     let tableCellTypes: [CellFunctions.Type] = [NewsCellOneViewModel.self , NewsCellTwoViewModel.self]
+    var moveToNextScreenCompletion: ((String) -> ())?
     
     private(set) var tableCells = [CellFunctions]()
     
@@ -40,23 +40,40 @@ extension NewsViewModel {
         }
         if letestNews != nil {
             var counter = 0
-            
             for (index ,_) in letestNews!.enumerated() {
                 if counter == 4 {
                     counter = 0
                 }
                 if counter == 3 {
+                    // two news items in one
                     let indexOne = self.letestNews?[index]
                     let indexTwo = self.letestNews?[index + 1]
                     
                     let newsCellTwo = NewsCellTwoViewModel(newsHeadingOne: indexOne?.id ?? " ", newsDescriptionOne: indexOne?.article_desc ?? " ", newsImageOne: indexOne?.url ?? " ", newsHeadingTwo: indexTwo?.id ?? " ", newsDescriptionTwo: indexTwo?.article_desc ?? " ", newsImageTwo: indexTwo?.url ?? " ")
                     cellViewModels.append(newsCellTwo)
                     counter += 1
+                    
+                    newsCellTwo.sendIndexPath = { (index , Box) in
+                        
+                        if Box == BoxNum.left.rawValue {
+                            let webUrl:String = indexOne?.article_url ?? ""
+                            self.moveToNextScreenCompletion?(webUrl)
+                        } else {
+                            let webUrl:String = indexTwo?.article_url ?? ""
+                            self.moveToNextScreenCompletion?(webUrl)
+                        }
+                    }
                 }
                 else {
                     let indexOne = self.letestNews?[index]
                     let newsCellOne = NewsCellOneViewModel(newsHeading: indexOne?.id ?? " ", newsDescription: indexOne?.article_desc ?? " ", newsImage: indexOne?.url ?? " ")
                     cellViewModels.append(newsCellOne)
+                    
+                    newsCellOne.sendIndexPath = {(index) in
+                        let webUrl:String = indexOne?.article_url ?? ""
+                        print(webUrl)
+                        self.moveToNextScreenCompletion?(webUrl)
+                    }
                     counter += 1
                 }
             }

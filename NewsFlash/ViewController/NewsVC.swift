@@ -13,6 +13,7 @@ class NewsVC: NewsView {
     
     let viewModel = NewsViewModel()
     var timer = Timer()
+    var tableViewHeaderView = TableViewHeaderView()
     var time: Int = 0 {
         didSet {
             reloadTableviewHeader()
@@ -21,10 +22,7 @@ class NewsVC: NewsView {
     
     func reloadTableviewHeader() {
         self.tableViewHeaderView.breakingNewsLabel.text =  self.viewModel.breakingNews?[time]
-       // tableViewHeaderView.contentView.setNeedsLayout()
     }
-    var tableViewHeaderView = TableViewHeaderView()
-    var setUpUI: ((Int) -> ())?
     
     override func viewDidAppear(_ animated: Bool) {
         
@@ -32,8 +30,6 @@ class NewsVC: NewsView {
         if isViewLoaded
         {
             self.timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(NewsVC.increaseTimer), userInfo: nil, repeats: true)
-        
-            
             reloadTableviewHeader()
         }
     }
@@ -51,6 +47,15 @@ class NewsVC: NewsView {
             DispatchQueue.main.async {
                 self.viewModel.assignTableViewCells()
                 self.newsTable.reloadData()
+            }
+        }
+        
+        viewModel.moveToNextScreenCompletion = { (url) in
+
+            if let url = URL(string: url ) {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:])
+                }
             }
         }
     }

@@ -11,7 +11,7 @@ import UIKit
 
 class NewsCellOne: UITableViewCell {
     
-    
+    var newsDescriptionTapped : (() ->())?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -73,13 +73,23 @@ class NewsCellOne: UITableViewCell {
         newsDescriptionLabel.topAnchor.constraint(equalTo: newsHeadingLabel.bottomAnchor, constant: 10).isActive = true
         newsDescriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -25).isActive = true
         newsDescriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15).isActive = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(newsDetailsPressed))
+        newsDescriptionLabel.isUserInteractionEnabled = true
+        newsDescriptionLabel.addGestureRecognizer(tap)
+        
+    }
+    @objc func newsDetailsPressed() {
+        newsDescriptionTapped?()
     }
 }
 
 class NewsCellTwo: UITableViewCell {
     
+    var newsDescriptionOneTapped : (() ->())?
+    var newsDescriptionTwoTapped : (() ->())?
+    
     var newsHeadingLabelOne: UILabel = {
-
+        
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 22)
@@ -207,6 +217,9 @@ class NewsCellTwo: UITableViewCell {
         newsDescriptionLabelOne.topAnchor.constraint(equalTo: newsHeadingLabelOne.bottomAnchor, constant: 10).isActive = true
         newsDescriptionLabelOne.trailingAnchor.constraint(equalTo: newsBoxView1.trailingAnchor, constant: -15).isActive = true
         newsDescriptionLabelOne.bottomAnchor.constraint(equalTo: newsBoxView1.bottomAnchor, constant: -10).isActive = true
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(newsDetailsOnePressed))
+        newsDescriptionLabelOne.isUserInteractionEnabled = true
+        newsDescriptionLabelOne.addGestureRecognizer(tap1)
         
         newsBoxView2.addSubview(newsImageTwo)
         newsBoxView2.addSubview(newsHeadingLabelTwo)
@@ -219,7 +232,6 @@ class NewsCellTwo: UITableViewCell {
         newsImageTwo.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         newsImageTwo.layer.borderWidth = 2
         
-        
         newsHeadingLabelTwo.leadingAnchor.constraint(equalTo: newsBoxView2.leadingAnchor, constant: 15).isActive = true
         newsHeadingLabelTwo.topAnchor.constraint(equalTo: newsImageTwo.bottomAnchor, constant: 15).isActive = true
         newsHeadingLabelTwo.trailingAnchor.constraint(equalTo: newsBoxView2.trailingAnchor, constant: -15).isActive = true
@@ -228,6 +240,17 @@ class NewsCellTwo: UITableViewCell {
         newsDescriptionLabelTwo.topAnchor.constraint(equalTo: newsHeadingLabelTwo.bottomAnchor, constant: 10).isActive = true
         newsDescriptionLabelTwo.trailingAnchor.constraint(equalTo: newsBoxView2.trailingAnchor, constant: -15).isActive = true
         newsDescriptionLabelTwo.bottomAnchor.constraint(equalTo: newsBoxView2.bottomAnchor, constant: -10).isActive = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(newsDetailsTwoPressed))
+        newsDescriptionLabelTwo.isUserInteractionEnabled = true
+        newsDescriptionLabelTwo.addGestureRecognizer(tap)
+    }
+    
+    @objc func newsDetailsTwoPressed() {
+        newsDescriptionTwoTapped?()
+    }
+    
+    @objc func newsDetailsOnePressed() {
+        newsDescriptionOneTapped?()
     }
 }
 
