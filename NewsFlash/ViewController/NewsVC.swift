@@ -20,8 +20,8 @@ class NewsVC: NewsView {
     }
     
     func reloadTableviewHeader() {
-        print("reloading")
         self.tableViewHeaderView.breakingNewsLabel.text =  self.viewModel.breakingNews?[time]
+       // tableViewHeaderView.contentView.setNeedsLayout()
     }
     var tableViewHeaderView = TableViewHeaderView()
     var setUpUI: ((Int) -> ())?
@@ -47,8 +47,6 @@ class NewsVC: NewsView {
         self.viewModel.tableCellTypes.forEach({ $0.registerCell(tableView: self.newsTable)})
         viewModel.getData(url: AllUrls.getAllNews.rawValue)
         
-//        tableViewHeaderView.contentView.setNeedsLayout()
-        
         viewModel.reloadData = {
             DispatchQueue.main.async {
                 self.viewModel.assignTableViewCells()
@@ -64,12 +62,8 @@ extension NewsVC {
         if ((viewModel.breakingNews?.count) != nil) {
             if time == (viewModel.breakingNews?.count)! - 1  {
                 time = 0
-                self.tableViewHeaderView.breakingNewsLabel.text =  self.viewModel.breakingNews?[time]
-                tableViewHeaderView.contentView.setNeedsLayout()
             }else {
                 time += 1
-                self.tableViewHeaderView.breakingNewsLabel.text =  self.viewModel.breakingNews?[time]
-                tableViewHeaderView.contentView.setNeedsLayout()
             }
         }
     }
@@ -77,6 +71,7 @@ extension NewsVC {
 
 extension NewsVC: UITableViewDelegate {
 }
+
 extension NewsVC: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -98,8 +93,10 @@ extension NewsVC: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = self.newsTable.dequeueReusableHeaderFooterView(withIdentifier: "tableViewHeaderView" ) as! TableViewHeaderView
-        headerView.breakingNewsLabel.text = viewModel.breakingNews?[time]
-        return headerView
+
+        tableViewHeaderView = self.newsTable.dequeueReusableHeaderFooterView(withIdentifier: "tableViewHeaderView" ) as! TableViewHeaderView
+        tableViewHeaderView.breakingNewsLabel.text = viewModel.breakingNews?[time]
+        tableViewHeaderView.backgroundColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
+        return tableViewHeaderView
     }
 }
