@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0FB07EA722A931EA00AF5CEA /* TableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FB07EA622A931EA00AF5CEA /* TableViewHeaderView.swift */; };
 		0FC1E4D122A509BB00B3BAC9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC1E4D022A509BB00B3BAC9 /* AppDelegate.swift */; };
 		0FC1E4D322A509BB00B3BAC9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC1E4D222A509BB00B3BAC9 /* ViewController.swift */; };
 		0FC1E4D622A509BB00B3BAC9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0FC1E4D422A509BB00B3BAC9 /* Main.storyboard */; };
@@ -44,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0FB07EA622A931EA00AF5CEA /* TableViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewHeaderView.swift; sourceTree = "<group>"; };
 		0FC1E4CD22A509BB00B3BAC9 /* NewsFlash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsFlash.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FC1E4D022A509BB00B3BAC9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0FC1E4D222A509BB00B3BAC9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 			children = (
 				0FC1E50722A50A7300B3BAC9 /* NewsView.swift */,
 				0FC1E51122A51F6B00B3BAC9 /* NewsViewCells.swift */,
+				0FB07EA622A931EA00AF5CEA /* TableViewHeaderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -331,6 +334,7 @@
 				0FC1E50A22A5161400B3BAC9 /* NewsViewModel.swift in Sources */,
 				0FC1E51622A5405400B3BAC9 /* Urls.swift in Sources */,
 				0FC1E50622A50A4D00B3BAC9 /* NewsVC.swift in Sources */,
+				0FB07EA722A931EA00AF5CEA /* TableViewHeaderView.swift in Sources */,
 				0FC1E51022A51DF500B3BAC9 /* NewsCellOneViewModel.swift in Sources */,
 				0FC1E4D122A509BB00B3BAC9 /* AppDelegate.swift in Sources */,
 				0FC1E50C22A5166F00B3BAC9 /* CellFunctions.swift in Sources */,

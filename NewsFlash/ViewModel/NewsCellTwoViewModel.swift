@@ -11,6 +11,7 @@ import UIKit
 
 class NewsCellTwoViewModel {
     
+    
     let newsHeadingOne: String
     let newsDescriptionOne: String
     let newsImageOne: String
@@ -43,6 +44,7 @@ extension NewsCellTwoViewModel: CellFunctions {
         cell.newsHeadingLabelTwo.text = newsHeadingTwo
         cell.newsDescriptionLabelOne.text = newsDescriptionOne
         cell.newsDescriptionLabelTwo.text = newsDescriptionTwo
+        cell.selectionStyle = .none
         return cell
     }
 }

@@ -13,48 +13,67 @@ class NewsVC: NewsView {
     
     let viewModel = NewsViewModel()
     var timer = Timer()
-    var time = 0
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        self.timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(NewsVC.increaseTimer), userInfo: nil, repeats: true)
+    var time: Int = 0 {
+        didSet {
+            reloadTableviewHeader()
+        }
     }
     
+    func reloadTableviewHeader() {
+        print("reloading")
+        self.tableViewHeaderView.breakingNewsLabel.text =  self.viewModel.breakingNews?[time]
+    }
+    var tableViewHeaderView = TableViewHeaderView()
+    var setUpUI: ((Int) -> ())?
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        super.viewDidAppear(true)
+        if isViewLoaded
+        {
+            self.timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(NewsVC.increaseTimer), userInfo: nil, repeats: true)
+        
+            
+            reloadTableviewHeader()
+        }
+    }
     
     override func viewDidLoad() {
         
         newsTable.dataSource = self
         newsTable.delegate = self
+        newsTable.register(TableViewHeaderView.self, forHeaderFooterViewReuseIdentifier: "tableViewHeaderView")
         setUpViews()
         self.viewModel.tableCellTypes.forEach({ $0.registerCell(tableView: self.newsTable)})
         viewModel.getData(url: AllUrls.getAllNews.rawValue)
+        
+//        tableViewHeaderView.contentView.setNeedsLayout()
+        
         viewModel.reloadData = {
             DispatchQueue.main.async {
                 self.viewModel.assignTableViewCells()
                 self.newsTable.reloadData()
             }
-            
         }
-        
     }
 }
 
 extension NewsVC {
     
-    @objc func increaseTimer() -> Int {
-        if time == (viewModel.breakingNews?.count)! - 1  {
-            time = 0
-            self.newsTable.reloadSections([0], with: .fade)
-            return time
-        }else {
-        time += 1
-            self.newsTable.reloadSections([0], with: .fade)
-            return time
+    @objc func increaseTimer() {
+        if ((viewModel.breakingNews?.count) != nil) {
+            if time == (viewModel.breakingNews?.count)! - 1  {
+                time = 0
+                self.tableViewHeaderView.breakingNewsLabel.text =  self.viewModel.breakingNews?[time]
+                tableViewHeaderView.contentView.setNeedsLayout()
+            }else {
+                time += 1
+                self.tableViewHeaderView.breakingNewsLabel.text =  self.viewModel.breakingNews?[time]
+                tableViewHeaderView.contentView.setNeedsLayout()
+            }
         }
     }
-
 }
-
 
 extension NewsVC: UITableViewDelegate {
 }
@@ -68,23 +87,19 @@ extension NewsVC: UITableViewDataSource {
         
         let cellViewModel = self.viewModel.tableCells[indexPath.row]
         return cellViewModel.cellInstantiate(tableView: tableView,indexPath: indexPath)
-        
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return viewModel.breakingNews?[increaseTimer()]
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 100
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 80
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = self.newsTable.dequeueReusableHeaderFooterView(withIdentifier: "tableViewHeaderView" ) as! TableViewHeaderView
+        headerView.breakingNewsLabel.text = viewModel.breakingNews?[time]
+        return headerView
     }
 }
-
-
-
-
-

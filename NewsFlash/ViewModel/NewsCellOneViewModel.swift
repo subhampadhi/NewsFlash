@@ -11,6 +11,7 @@ import UIKit
 
 class NewsCellOneViewModel {
     
+    
     let newsHeading: String
     let newsDescription: String
     let newsImage: String
@@ -33,6 +34,7 @@ extension NewsCellOneViewModel: CellFunctions {
        cell.newsImage.image = UIImage(url: URL(string:newsImage))
         cell.newsHeadingLabel.text = newsHeading
         cell.newsDescriptionLabel.text = newsDescription
+        cell.selectionStyle = .none
         return cell
     }
 }
@@ -40,7 +42,6 @@ extension NewsCellOneViewModel: CellFunctions {
 extension UIImage {
     convenience init?(url: URL?) {
         guard let url = url else { return nil }
-        
         do {
             let data = try Data(contentsOf: url)
             self.init(data: data)

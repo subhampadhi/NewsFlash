@@ -10,6 +10,7 @@ import Foundation
 
 class NewsViewModel {
     
+    
     var message: Message?
     var letestNews: [LatestNew]?
     var breakingNews: [String]?
@@ -32,17 +33,16 @@ extension NewsViewModel {
     func setupTableViewCells() -> [CellFunctions] {
         
         var cellViewModels = [CellFunctions]()
+        
         if (mainStory != nil) {
             let newsCellOne = NewsCellOneViewModel(newsHeading: mainStory?.id ?? "", newsDescription: mainStory?.title ?? "", newsImage: mainStory?.url ?? "")
             cellViewModels.append(newsCellOne)
         }
-        
         if letestNews != nil {
             var counter = 0
-
-            for (index ,result) in letestNews!.enumerated() {
+            
+            for (index ,_) in letestNews!.enumerated() {
                 if counter == 4 {
-                    print("Missed !!")
                     counter = 0
                 }
                 if counter == 3 {
@@ -50,18 +50,17 @@ extension NewsViewModel {
                     let indexTwo = self.letestNews?[index + 1]
                     
                     let newsCellTwo = NewsCellTwoViewModel(newsHeadingOne: indexOne?.id ?? " ", newsDescriptionOne: indexOne?.article_desc ?? " ", newsImageOne: indexOne?.url ?? " ", newsHeadingTwo: indexTwo?.id ?? " ", newsDescriptionTwo: indexTwo?.article_desc ?? " ", newsImageTwo: indexTwo?.url ?? " ")
-                    
                     cellViewModels.append(newsCellTwo)
                     counter += 1
                 }
-                 else {
-                        let indexOne = self.letestNews?[index]
-                        let newsCellOne = NewsCellOneViewModel(newsHeading: indexOne?.id ?? " ", newsDescription: indexOne?.article_desc ?? " ", newsImage: indexOne?.url ?? " ")
-                        cellViewModels.append(newsCellOne)
-                        counter += 1
-                    }
+                else {
+                    let indexOne = self.letestNews?[index]
+                    let newsCellOne = NewsCellOneViewModel(newsHeading: indexOne?.id ?? " ", newsDescription: indexOne?.article_desc ?? " ", newsImage: indexOne?.url ?? " ")
+                    cellViewModels.append(newsCellOne)
+                    counter += 1
                 }
             }
+        }
         return cellViewModels
     }
     

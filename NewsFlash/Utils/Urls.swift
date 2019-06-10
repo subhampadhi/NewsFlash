@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 public enum AllUrls: String {
     case getAllNews = "http://pastebin.com/raw/EUxVs4Ns"
 }
