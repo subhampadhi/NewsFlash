@@ -54,9 +54,10 @@ extension NewsVC {
         
         viewModel.reloadData = {
             DispatchQueue.main.async { [weak  self] in
+                self?.viewModel.saveToRealm()
                 self?.viewModel.assignTableViewCells()
                 self?.newsTable.reloadData()
-                self?.viewModel.saveToRealm()
+                
             }
         }
         
@@ -68,7 +69,9 @@ extension NewsVC {
         }
         viewModel.moveToNextScreenCompletion = { (url) in
             
-            if let url = URL(string: url ) {
+            guard let url = URL(string: url ) else {return}
+            print(url)
+            if InternetRechability.isConnectedToNetwork(){
                 if UIApplication.shared.canOpenURL(url) {
                     UIApplication.shared.open(url, options: [:])
                 }
@@ -110,11 +113,11 @@ extension NewsVC: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 100
+        return UITableView.automaticDimension
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-
+        
         tableViewHeaderView = self.newsTable.dequeueReusableHeaderFooterView(withIdentifier: "tableViewHeaderView" ) as! TableViewHeaderView
         tableViewHeaderView.breakingNewsLabel.text = viewModel.breakingNews?[time]
         tableViewHeaderView.backgroundColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)

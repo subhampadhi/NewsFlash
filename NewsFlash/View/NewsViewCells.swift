@@ -76,8 +76,7 @@ class NewsCellOne: UITableViewCell {
         newsDescriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15).isActive = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(newsDetailsPressed))
         newsDescriptionLabel.isUserInteractionEnabled = true
-        newsDescriptionLabel.addGestureRecognizer(tap)
-        
+        newsDescriptionLabel.addGestureRecognizer(tap) 
     }
     @objc func newsDetailsPressed() {
         newsDescriptionTapped?()

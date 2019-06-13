@@ -20,6 +20,14 @@ class NewsViewModel {
     let tableCellTypes: [CellFunctions.Type] = [NewsCellOneViewModel.self , NewsCellTwoViewModel.self]
     var moveToNextScreenCompletion: ((String) -> ())?
     
+    var timer = Timer()
+    var isInternetRechable: Bool = false {
+        didSet {
+            if !isInternetRechable {
+                getData(url: AllUrls.getAllNews.rawValue)
+            }
+        }
+    }
     
     var latest_News: Results<Latest_News_Realm_Model>?
     var breaking_News: Results<Breaking_News_Realm_Model>?
@@ -30,8 +38,10 @@ class NewsViewModel {
     private(set) var tableCells = [CellFunctions]()
     
     init() {
-        self.assignTableViewCells()
+        self.timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(NewsViewModel.checkInternetConnection), userInfo: nil, repeats: true)
+       // self.assignTableViewCells()
     }
+    
     func assignTableViewCells() {
         self.tableCells = self.setupTableViewCells()
     }
@@ -39,21 +49,27 @@ class NewsViewModel {
 
 extension NewsViewModel {
     
+    @objc func checkInternetConnection() {
+        self.isInternetRechable = InternetRechability.isConnectedToNetwork()
+    }
+    
     func setupTableViewCells() -> [CellFunctions] {
         
         var cellViewModels = [CellFunctions]()
+        
         latest_News = realm.objects(Latest_News_Realm_Model.self)
         breaking_News = realm.objects(Breaking_News_Realm_Model.self)
         main_Story = realm.objects(Main_Story_Realm_Model.self)
-        
-        if (mainStory != nil) {
+
+        if (main_Story != nil) {
             
             let newsCellOne = NewsCellOneViewModel(newsHeading: main_Story?[0].id ?? "" , newsDescription: main_Story?[0].title ?? "", newsImage: main_Story?[0].url ?? "")
             cellViewModels.append(newsCellOne)
         }
-        if letestNews != nil {
+        
+        if latest_News != nil {
             var counter = 0
-            for (index ,_) in letestNews!.enumerated() {
+            for (index ,_) in latest_News!.enumerated() {
                 if counter == 4 {
                     counter = 0
                 }
@@ -61,13 +77,13 @@ extension NewsViewModel {
                     // two news items in one
                     let indexOne = latest_News?[index]
                     let indexTwo = latest_News?[index + 1]
-                    
+                    print(indexOne?.article_url)
                     let newsCellTwo = NewsCellTwoViewModel(newsHeadingOne: indexOne?.id ?? " ", newsDescriptionOne: indexOne?.article_desc ?? " ", newsImageOne: indexOne?.url ?? " ", newsHeadingTwo: indexTwo?.id ?? " ", newsDescriptionTwo: indexTwo?.article_desc ?? " ", newsImageTwo: indexTwo?.url ?? " ")
                     cellViewModels.append(newsCellTwo)
-                    counter += 1
+                   
                     
                     newsCellTwo.sendIndexPath = { (index , Box) in
-                        
+
                         if Box == BoxNum.left.rawValue {
                             let webUrl:String = indexOne?.article_url ?? ""
                             self.moveToNextScreenCompletion?(webUrl)
@@ -76,6 +92,7 @@ extension NewsViewModel {
                             self.moveToNextScreenCompletion?(webUrl)
                         }
                     }
+                     counter += 1
                 }
                 else {
                     let indexOne = latest_News?[index]
@@ -122,11 +139,12 @@ extension NewsViewModel {
     }
     
     func saveToRealm() {
+        
         let realm = try! Realm()
         let latestNewsObjects = realm.objects(Latest_News_Realm_Model.self)
         let breakingNewsObject = realm.objects(Breaking_News_Realm_Model.self)
         let mainStoryObject = realm.objects(Main_Story_Realm_Model.self)
-        
+
         try! realm.write {
             realm.delete(latestNewsObjects)
             realm.delete(breakingNewsObject)
@@ -138,7 +156,7 @@ extension NewsViewModel {
         }
         
         for news in breakingNews! {
-            let newEntry = Breaking_News_Realm_Model(article: news ?? " ")
+            let newEntry = Breaking_News_Realm_Model(article: news )
             RealmServices.shared.create(newEntry)
         }
         

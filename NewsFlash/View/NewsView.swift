@@ -11,7 +11,6 @@ import UIKit
 
 class NewsView: UIViewController {
     
-    
     var newsTable:UITableView = {
         let view = UITableView()
         view.translatesAutoresizingMaskIntoConstraints = false
