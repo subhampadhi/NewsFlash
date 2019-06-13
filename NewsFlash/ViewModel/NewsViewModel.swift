@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 class NewsViewModel {
     
@@ -15,8 +16,16 @@ class NewsViewModel {
     var breakingNews: [String]?
     var mainStory: MainStory?
     var reloadData: (() -> ())?
+    var reloadPersistentData: (() -> ())?
     let tableCellTypes: [CellFunctions.Type] = [NewsCellOneViewModel.self , NewsCellTwoViewModel.self]
     var moveToNextScreenCompletion: ((String) -> ())?
+    
+    
+    var latest_News: Results<Latest_News_Realm_Model>?
+    var breaking_News: Results<Breaking_News_Realm_Model>?
+    var main_Story: Results<Main_Story_Realm_Model>?
+    
+    let realm = RealmServices.shared.realm
     
     private(set) var tableCells = [CellFunctions]()
     
@@ -33,9 +42,13 @@ extension NewsViewModel {
     func setupTableViewCells() -> [CellFunctions] {
         
         var cellViewModels = [CellFunctions]()
+        latest_News = realm.objects(Latest_News_Realm_Model.self)
+        breaking_News = realm.objects(Breaking_News_Realm_Model.self)
+        main_Story = realm.objects(Main_Story_Realm_Model.self)
         
         if (mainStory != nil) {
-            let newsCellOne = NewsCellOneViewModel(newsHeading: mainStory?.id ?? "", newsDescription: mainStory?.title ?? "", newsImage: mainStory?.url ?? "")
+            
+            let newsCellOne = NewsCellOneViewModel(newsHeading: main_Story?[0].id ?? "" , newsDescription: main_Story?[0].title ?? "", newsImage: main_Story?[0].url ?? "")
             cellViewModels.append(newsCellOne)
         }
         if letestNews != nil {
@@ -46,8 +59,8 @@ extension NewsViewModel {
                 }
                 if counter == 3 {
                     // two news items in one
-                    let indexOne = self.letestNews?[index]
-                    let indexTwo = self.letestNews?[index + 1]
+                    let indexOne = latest_News?[index]
+                    let indexTwo = latest_News?[index + 1]
                     
                     let newsCellTwo = NewsCellTwoViewModel(newsHeadingOne: indexOne?.id ?? " ", newsDescriptionOne: indexOne?.article_desc ?? " ", newsImageOne: indexOne?.url ?? " ", newsHeadingTwo: indexTwo?.id ?? " ", newsDescriptionTwo: indexTwo?.article_desc ?? " ", newsImageTwo: indexTwo?.url ?? " ")
                     cellViewModels.append(newsCellTwo)
@@ -65,7 +78,7 @@ extension NewsViewModel {
                     }
                 }
                 else {
-                    let indexOne = self.letestNews?[index]
+                    let indexOne = latest_News?[index]
                     let newsCellOne = NewsCellOneViewModel(newsHeading: indexOne?.id ?? " ", newsDescription: indexOne?.article_desc ?? " ", newsImage: indexOne?.url ?? " ")
                     cellViewModels.append(newsCellOne)
                     
@@ -87,6 +100,7 @@ extension NewsViewModel {
             , error) in
             if let error = error {
                 print(error)
+                self.reloadPersistentData?()
             }
             if let response = response {
                 print(response)
@@ -100,9 +114,35 @@ extension NewsViewModel {
                 self.breakingNews = value.message?.breaking_news
                 self.mainStory = value.message?.main_story
                 self.reloadData?()
+                
             } catch let err {
                 print(err)
             }
             }.resume()
+    }
+    
+    func saveToRealm() {
+        let realm = try! Realm()
+        let latestNewsObjects = realm.objects(Latest_News_Realm_Model.self)
+        let breakingNewsObject = realm.objects(Breaking_News_Realm_Model.self)
+        let mainStoryObject = realm.objects(Main_Story_Realm_Model.self)
+        
+        try! realm.write {
+            realm.delete(latestNewsObjects)
+            realm.delete(breakingNewsObject)
+            realm.delete(mainStoryObject)
+        }
+        for i in self.letestNews! {
+            let newEntry = Latest_News_Realm_Model(article_desc: i.article_desc ?? "", article_url: i.article_url ?? "", id: i.id ?? "", type: i.type ?? "", updateAt: i.updateAt ?? "", url: i.url ?? "")
+            RealmServices.shared.create(newEntry)
+        }
+        
+        for news in breakingNews! {
+            let newEntry = Breaking_News_Realm_Model(article: news ?? " ")
+            RealmServices.shared.create(newEntry)
+        }
+        
+        let newEntry = Main_Story_Realm_Model(article_desc: mainStory?.title ?? " ", article_url: mainStory?.article_url ?? "", id: mainStory?.id ?? " ", type: mainStory?.type ?? " ", updateAt: mainStory?.updateAt ?? " ", url:mainStory?.url ?? "")
+        RealmServices.shared.create(newEntry)
     }
 }

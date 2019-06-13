@@ -5,7 +5,6 @@ struct Result : Codable {
     let error : [String]?
     let message : Message?
     let status_code : Int?
-
 }
 
 struct Message : Codable {

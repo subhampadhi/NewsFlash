@@ -46,9 +46,11 @@ extension NewsCellTwoViewModel: CellFunctions {
         cell.newsDescriptionLabelOne.text = newsDescriptionOne
         cell.newsDescriptionLabelTwo.text = newsDescriptionTwo
         cell.selectionStyle = .none
+        
         cell.newsDescriptionOneTapped = { () in
             self.sendIndexPath?(indexPath.row , BoxNum.left.rawValue)
         }
+        
         cell.newsDescriptionTwoTapped = { () in
             self.sendIndexPath?(indexPath.row , BoxNum.right.rawValue)
         }

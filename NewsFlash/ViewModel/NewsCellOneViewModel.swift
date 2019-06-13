@@ -16,9 +16,7 @@ class NewsCellOneViewModel {
     let newsDescription: String
     let newsImage: String
     var sendIndexPath:((Int) -> ())?
-   
-    
-    
+
     init(newsHeading: String , newsDescription: String ,newsImage:String) {
         self.newsHeading = newsHeading
         self.newsDescription = newsDescription

@@ -12,6 +12,7 @@ import UIKit
 class NewsCellOne: UITableViewCell {
     
     var newsDescriptionTapped : (() ->())?
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -181,7 +182,7 @@ class NewsCellTwo: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    let aview = UIScreen.main.bounds
+    let screenBounds = UIScreen.main.bounds
     
     func initViews() {
         
@@ -191,12 +192,12 @@ class NewsCellTwo: UITableViewCell {
         newsBoxView1.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
         newsBoxView1.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
         newsBoxView1.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
-        newsBoxView1.widthAnchor.constraint(equalToConstant: (CGFloat(Float(aview.width)/Float(2))) - 5).isActive = true
+        newsBoxView1.widthAnchor.constraint(equalToConstant: (CGFloat(Float(screenBounds.width)/Float(2))) - 5).isActive = true
         
         newsBoxView2.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant:-10).isActive = true
         newsBoxView2.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
         newsBoxView2.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
-        newsBoxView2.widthAnchor.constraint(equalToConstant: (CGFloat(Float(aview.width)/Float(2))) - 5).isActive = true
+        newsBoxView2.widthAnchor.constraint(equalToConstant: (CGFloat(Float(screenBounds.width)/Float(2))) - 5).isActive = true
         
         newsBoxView1.addSubview(newsImageOne)
         newsBoxView1.addSubview(newsHeadingLabelOne)

@@ -14,6 +14,7 @@ class NewsVC: NewsView {
     let viewModel = NewsViewModel()
     var timer = Timer()
     var tableViewHeaderView = TableViewHeaderView()
+    
     var time: Int = 0 {
         didSet {
             reloadTableviewHeader()
@@ -21,7 +22,8 @@ class NewsVC: NewsView {
     }
     
     func reloadTableviewHeader() {
-        self.tableViewHeaderView.breakingNewsLabel.text =  self.viewModel.breakingNews?[time]
+        
+        self.tableViewHeaderView.breakingNewsLabel.text =  self.viewModel.breaking_News?[time].article
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -42,16 +44,30 @@ class NewsVC: NewsView {
         setUpViews()
         self.viewModel.tableCellTypes.forEach({ $0.registerCell(tableView: self.newsTable)})
         viewModel.getData(url: AllUrls.getAllNews.rawValue)
+        handleClosures()
+    }
+}
+
+extension NewsVC {
+    
+    func handleClosures() {
         
         viewModel.reloadData = {
-            DispatchQueue.main.async {
-                self.viewModel.assignTableViewCells()
-                self.newsTable.reloadData()
+            DispatchQueue.main.async { [weak  self] in
+                self?.viewModel.assignTableViewCells()
+                self?.newsTable.reloadData()
+                self?.viewModel.saveToRealm()
             }
         }
         
+        viewModel.reloadPersistentData = {
+            DispatchQueue.main.async { [weak  self] in
+                self?.viewModel.assignTableViewCells()
+                self?.newsTable.reloadData()
+            }
+        }
         viewModel.moveToNextScreenCompletion = { (url) in
-
+            
             if let url = URL(string: url ) {
                 if UIApplication.shared.canOpenURL(url) {
                     UIApplication.shared.open(url, options: [:])
