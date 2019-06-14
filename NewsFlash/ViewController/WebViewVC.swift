@@ -15,6 +15,5 @@ class WebViewVC: UIViewController {
     
     override func viewDidLoad() {
         super .viewDidLoad()
-        print("main url is \(mainUrl)")
     }
 }

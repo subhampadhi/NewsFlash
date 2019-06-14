@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0F0C6FA822B0CBCC00404DCF /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0C6FA722B0CBCC00404DCF /* PersistenceService.swift */; };
 		0F0C6FBC22B1025D00404DCF /* RealmServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0C6FBB22B1025D00404DCF /* RealmServices.swift */; };
 		0F0C6FBE22B103C600404DCF /* Lates_News_Realm_Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0C6FBD22B103C600404DCF /* Lates_News_Realm_Model.swift */; };
 		0F0C6FC022B1053200404DCF /* Main_Story_Realm_Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0C6FBF22B1053200404DCF /* Main_Story_Realm_Model.swift */; };
@@ -56,7 +55,6 @@
 
 /* Begin PBXFileReference section */
 		01B324DB2E65258309283D0D /* Pods-NewsFlashTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsFlashTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsFlashTests/Pods-NewsFlashTests.release.xcconfig"; sourceTree = "<group>"; };
-		0F0C6FA722B0CBCC00404DCF /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
 		0F0C6FBB22B1025D00404DCF /* RealmServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmServices.swift; sourceTree = "<group>"; };
 		0F0C6FBD22B103C600404DCF /* Lates_News_Realm_Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lates_News_Realm_Model.swift; sourceTree = "<group>"; };
 		0F0C6FBF22B1053200404DCF /* Main_Story_Realm_Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main_Story_Realm_Model.swift; sourceTree = "<group>"; };
@@ -173,7 +171,6 @@
 				0FC1E4DC22A509BD00B3BAC9 /* LaunchScreen.storyboard */,
 				0FC1E4D422A509BB00B3BAC9 /* Main.storyboard */,
 				0FC1E4D722A509BB00B3BAC9 /* NewsFlash.xcdatamodeld */,
-				0F0C6FA722B0CBCC00404DCF /* PersistenceService.swift */,
 			);
 			path = NewsFlash;
 			sourceTree = "<group>";
@@ -494,7 +491,6 @@
 				0FC1E51022A51DF500B3BAC9 /* NewsCellOneViewModel.swift in Sources */,
 				0FC1E4D122A509BB00B3BAC9 /* AppDelegate.swift in Sources */,
 				0FC1E50C22A5166F00B3BAC9 /* CellFunctions.swift in Sources */,
-				0F0C6FA822B0CBCC00404DCF /* PersistenceService.swift in Sources */,
 				0FC1E51422A51FD300B3BAC9 /* NewsCellTwoViewModel.swift in Sources */,
 				0FC1E50822A50A7300B3BAC9 /* NewsView.swift in Sources */,
 				0FC1E4D922A509BB00B3BAC9 /* NewsFlash.xcdatamodeld in Sources */,

@@ -39,7 +39,7 @@ class NewsViewModel {
     
     init() {
         self.timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(NewsViewModel.checkInternetConnection), userInfo: nil, repeats: true)
-       // self.assignTableViewCells()
+        self.assignTableViewCells()
     }
     
     func assignTableViewCells() {
@@ -77,7 +77,6 @@ extension NewsViewModel {
                     // two news items in one
                     let indexOne = latest_News?[index]
                     let indexTwo = latest_News?[index + 1]
-                    print(indexOne?.article_url)
                     let newsCellTwo = NewsCellTwoViewModel(newsHeadingOne: indexOne?.id ?? " ", newsDescriptionOne: indexOne?.article_desc ?? " ", newsImageOne: indexOne?.url ?? " ", newsHeadingTwo: indexTwo?.id ?? " ", newsDescriptionTwo: indexTwo?.article_desc ?? " ", newsImageTwo: indexTwo?.url ?? " ")
                     cellViewModels.append(newsCellTwo)
                    
@@ -150,6 +149,7 @@ extension NewsViewModel {
             realm.delete(breakingNewsObject)
             realm.delete(mainStoryObject)
         }
+        
         for i in self.letestNews! {
             let newEntry = Latest_News_Realm_Model(article_desc: i.article_desc ?? "", article_url: i.article_url ?? "", id: i.id ?? "", type: i.type ?? "", updateAt: i.updateAt ?? "", url: i.url ?? "")
             RealmServices.shared.create(newEntry)

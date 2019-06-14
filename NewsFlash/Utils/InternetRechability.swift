@@ -21,7 +21,6 @@ open class InternetRechability {
             $0.withMemoryRebound(to: sockaddr.self, capacity: 1) { zeroSockAddress in
                 SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
             }
-            //            SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
         }) else {
             return false
         }

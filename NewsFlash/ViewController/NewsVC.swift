@@ -57,7 +57,6 @@ extension NewsVC {
                 self?.viewModel.saveToRealm()
                 self?.viewModel.assignTableViewCells()
                 self?.newsTable.reloadData()
-                
             }
         }
         
@@ -67,8 +66,8 @@ extension NewsVC {
                 self?.newsTable.reloadData()
             }
         }
+        
         viewModel.moveToNextScreenCompletion = { (url) in
-            
             guard let url = URL(string: url ) else {return}
             print(url)
             if InternetRechability.isConnectedToNetwork(){
