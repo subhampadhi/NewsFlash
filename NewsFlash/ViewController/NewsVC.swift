@@ -22,7 +22,6 @@ class NewsVC: NewsView {
     }
     
     func reloadTableviewHeader() {
-        
         self.tableViewHeaderView.breakingNewsLabel.text =  self.viewModel.breaking_News?[time].article
     }
     

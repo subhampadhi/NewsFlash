@@ -19,6 +19,7 @@ class NewsViewModel {
     var reloadPersistentData: (() -> ())?
     let tableCellTypes: [CellFunctions.Type] = [NewsCellOneViewModel.self , NewsCellTwoViewModel.self]
     var moveToNextScreenCompletion: ((String) -> ())?
+    let apiManager = ApiManager()
     
     var timer = Timer()
     var isInternetRechable: Bool = false {
@@ -60,7 +61,7 @@ extension NewsViewModel {
         latest_News = realm.objects(Latest_News_Realm_Model.self)
         breaking_News = realm.objects(Breaking_News_Realm_Model.self)
         main_Story = realm.objects(Main_Story_Realm_Model.self)
-
+        
         if (main_Story != nil) {
             
             let newsCellOne = NewsCellOneViewModel(newsHeading: main_Story?[0].id ?? "" , newsDescription: main_Story?[0].title ?? "", newsImage: main_Story?[0].url ?? "")
@@ -79,10 +80,10 @@ extension NewsViewModel {
                     let indexTwo = latest_News?[index + 1]
                     let newsCellTwo = NewsCellTwoViewModel(newsHeadingOne: indexOne?.id ?? " ", newsDescriptionOne: indexOne?.article_desc ?? " ", newsImageOne: indexOne?.url ?? " ", newsHeadingTwo: indexTwo?.id ?? " ", newsDescriptionTwo: indexTwo?.article_desc ?? " ", newsImageTwo: indexTwo?.url ?? " ")
                     cellViewModels.append(newsCellTwo)
-                   
+                    
                     
                     newsCellTwo.sendIndexPath = { (index , Box) in
-
+                        
                         if Box == BoxNum.left.rawValue {
                             let webUrl:String = indexOne?.article_url ?? ""
                             self.moveToNextScreenCompletion?(webUrl)
@@ -91,7 +92,7 @@ extension NewsViewModel {
                             self.moveToNextScreenCompletion?(webUrl)
                         }
                     }
-                     counter += 1
+                    counter += 1
                 }
                 else {
                     let indexOne = latest_News?[index]
@@ -111,17 +112,18 @@ extension NewsViewModel {
     }
     
     func getData(url:String) {
+        
         guard let url = NSURL(string : url) else {return}
-        URLSession.shared.dataTask(with: url.absoluteURL!) { (data, response
-            , error) in
-            if let error = error {
+        self.apiManager.makeRequest(toURL: url as URL, withHttpMethod: .get) { (results) in
+            
+            if let error = results.error {
                 print(error)
                 self.reloadPersistentData?()
             }
-            if let response = response {
+            if let response = results.response {
                 print(response)
             }
-            guard let data = data else { return }
+            guard let data = results.data else { return }
             do {
                 let decoder = JSONDecoder()
                 let value = try decoder.decode(Result.self, from: data)
@@ -134,33 +136,33 @@ extension NewsViewModel {
             } catch let err {
                 print(err)
             }
-            }.resume()
+        }
+}
+    
+func saveToRealm() {
+    
+    let realm = try! Realm()
+    let latestNewsObjects = realm.objects(Latest_News_Realm_Model.self)
+    let breakingNewsObject = realm.objects(Breaking_News_Realm_Model.self)
+    let mainStoryObject = realm.objects(Main_Story_Realm_Model.self)
+    
+    try! realm.write {
+        realm.delete(latestNewsObjects)
+        realm.delete(breakingNewsObject)
+        realm.delete(mainStoryObject)
     }
     
-    func saveToRealm() {
-        
-        let realm = try! Realm()
-        let latestNewsObjects = realm.objects(Latest_News_Realm_Model.self)
-        let breakingNewsObject = realm.objects(Breaking_News_Realm_Model.self)
-        let mainStoryObject = realm.objects(Main_Story_Realm_Model.self)
-
-        try! realm.write {
-            realm.delete(latestNewsObjects)
-            realm.delete(breakingNewsObject)
-            realm.delete(mainStoryObject)
-        }
-        
-        for i in self.letestNews! {
-            let newEntry = Latest_News_Realm_Model(article_desc: i.article_desc ?? "", article_url: i.article_url ?? "", id: i.id ?? "", type: i.type ?? "", updateAt: i.updateAt ?? "", url: i.url ?? "")
-            RealmServices.shared.create(newEntry)
-        }
-        
-        for news in breakingNews! {
-            let newEntry = Breaking_News_Realm_Model(article: news )
-            RealmServices.shared.create(newEntry)
-        }
-        
-        let newEntry = Main_Story_Realm_Model(article_desc: mainStory?.title ?? " ", article_url: mainStory?.article_url ?? "", id: mainStory?.id ?? " ", type: mainStory?.type ?? " ", updateAt: mainStory?.updateAt ?? " ", url:mainStory?.url ?? "")
+    for i in self.letestNews! {
+        let newEntry = Latest_News_Realm_Model(article_desc: i.article_desc ?? "", article_url: i.article_url ?? "", id: i.id ?? "", type: i.type ?? "", updateAt: i.updateAt ?? "", url: i.url ?? "")
         RealmServices.shared.create(newEntry)
     }
+    
+    for news in breakingNews! {
+        let newEntry = Breaking_News_Realm_Model(article: news )
+        RealmServices.shared.create(newEntry)
+    }
+    
+    let newEntry = Main_Story_Realm_Model(article_desc: mainStory?.title ?? " ", article_url: mainStory?.article_url ?? "", id: mainStory?.id ?? " ", type: mainStory?.type ?? " ", updateAt: mainStory?.updateAt ?? " ", url:mainStory?.url ?? "")
+    RealmServices.shared.create(newEntry)
+}
 }
